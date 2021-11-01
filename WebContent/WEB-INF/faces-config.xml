@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+	version="2.2">
+	
+	<application>
+    	<el-resolver>
+    		org.springframework.web.jsf.el.SpringBeanFacesELResolver
+    	</el-resolver>
+  	</application>
+
+	<navigation-rule>
+
+		<from-view-id>*</from-view-id>
+		
+		<navigation-case>
+			<from-outcome>panel</from-outcome>
+			<to-view-id>inicio/panel.xhtml</to-view-id>
+		</navigation-case>
+
+		<!-- Producto -->
+
+		<navigation-case>
+			<from-outcome>productos_listado</from-outcome>
+			<to-view-id>mantenimiento/productos_listado.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>productos_registro</from-outcome>
+			<to-view-id>mantenimiento/productos_registro.xhtml</to-view-id>
+		</navigation-case>
+
+	</navigation-rule>
+
+</faces-config>

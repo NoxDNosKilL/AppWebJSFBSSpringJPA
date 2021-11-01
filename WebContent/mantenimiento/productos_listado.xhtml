@@ -1,0 +1,175 @@
+ <ui:composition template="/template/master.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="title">
+        .:Listado de Productos :.
+    </ui:define>
+
+    <ui:define name="titleCont">
+        <span>Listado de Productos</span>
+    </ui:define>
+
+    <ui:define name="content">
+		<h:form id="frmListado">
+		
+		<div class="row">
+			<div class="col-sm-4">
+               <div class="form-group">
+                   <h:outputLabel for="nombre"
+                   				  value="Nombre:"
+                   				  styleClass="control-label"/>
+
+                   <p:inputText 	autocomplete="off"
+                   					id="nombre"
+                   					styleClass="form-control"
+                   					value="#{productoMB.producto.nombre}"
+                   					maxlength="120"
+                   					label="nombre"/>
+               </div>
+            </div>
+
+            <div class="col-sm-8 text-right" >
+            	<div class="form-group box-main-btn">
+            		<span style="display: block;height: 30px;"></span>
+            		<p:commandButton 	value="Limpiar" 
+                						actionListener="#{productoMB.limpiar()}" 
+                						styleClass="btn btn-default"
+                            			icon="icon-eraser"
+                						ajax="true"
+                						update="listado,nombre" />
+            		<p:commandButton 	value="Buscar" 
+                						actionListener="#{productoMB.listar()}" 
+                						styleClass="btn btn-primary btn-border"
+                						icon="icon-magnifying-glass"
+                            			ajax="true"
+            							update="listado" />
+            							
+                	<p:commandButton 	value="Nuevo"
+                						action="#{productoMB.nuevo()}" 
+                						styleClass="btn btn-warning"
+                            			icon="icon-add-to-list"
+                						ajax="false" />
+
+                </div>
+            </div>
+    	</div>
+    	
+
+    	<div class="row">
+    		<div class="col-sm-12">
+    		<div class="form-group table-responsive box-table-class">
+
+        							<p:dataTable 	id="listado"
+                                    				var="producto"
+                                    				value="#{productoMB.productos}"
+                                    				rowKey="#{producto.id}"
+	                                                paginator="true"
+	                                                paginatorPosition="top"
+	                                                rowsPerPageTemplate="10,20,30,40,50"
+	                                                rows="10"
+	                                                styleClass="table table-bordered"
+		                                    		emptyMessage="No existen registros"
+                                    				rowIndexVar="item"
+                                    				style="margin-bottom:0">
+
+                                        <p:column headerText="Item" style="width:40px;text-align:center">
+                                            <h:outputText value="#{item + 1}" />
+                                        </p:column>
+										 
+										 <p:column headerText="Código" style="width:50px;text-align:center">
+								            <h:outputText value="#{producto.id}" />
+								        </p:column>
+								 
+								        <p:column headerText="Nombre">
+								            <h:outputText value="#{producto.nombre}" />
+								        </p:column>
+								 
+								        <p:column headerText="Precio" style="width:100px;text-align:right">
+								            <h:outputText value="#{producto.precio}" />
+								        </p:column>
+								        
+								        <p:column headerText="Stock" style="width:100px;text-align:right">
+								            <h:outputText value="#{producto.stock}" />
+								        </p:column>
+
+										<p:column headerText="Acción" style="width:120px;text-align:center" exportable="false">
+											<p:commandButton
+													title="Modificar"
+													action="#{productoMB.modificar(producto)}"
+													ajax="false"
+													icon="ui-icon ui-icon-pencil"
+													styleClass="colorSuccess"/>
+													
+											<p:commandButton
+													icon="ui-icon ui-icon-trash"
+													title="Eliminar"
+													actionListener="#{productoMB.seleccionar(producto)}"
+													oncomplete="PF('confirmDlgEliminar').show()"
+													ajax="true"
+													update=":frmListado:idconfirmDlgEliminar"
+													
+											/> 
+											
+										</p:column>
+                                    </p:dataTable>
+    		</div>
+
+    		</div>
+    	
+    	
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-12 text-right">
+    			<p:commandButton 	value="PDF"
+                					action="#{alumnoController.exportarPDF()}"
+                					styleClass="btn btn-default"
+                					ajax="false" />
+               	<p:commandButton 	value="XLS"
+                					action="#{alumnoController.exportExcel()}"
+                					styleClass="btn btn-default"
+                					ajax="false" />
+    		</div>
+    	</div>
+    	
+    	 <div class="row">
+			<div class="col-sm-6 text-right">
+				<p:confirmDialog 	id="idconfirmDlgEliminar"
+									widgetVar="confirmDlgEliminar" 
+									header="Aviso" 
+									message="¿Está seguro de eliminar el registro 
+									#{productoMB.productoSeleccionado.nombre}?" 
+									style="‎display: block;margin-top:250px;margin-left:450px">
+					
+				    <p:commandButton 	value="Si"
+				    					actionListener="#{productoMB.eliminar()}" 
+				    					styleClass="ui-confirmdialog-yes" 
+				    					icon="ui-icon-check"
+				    					ajax="true"
+				    					oncomplete="PF('confirmDlgEliminar').hide()"
+				    					update=":frmListado:growl,:frmListado:listado,:frmListado:idconfirmDlgEliminar" />
+				    					
+				    <p:commandButton 	value="No"  
+				    					onclick="PF('confirmDlgEliminar').hide()"
+				    					styleClass="ui-confirmdialog-no" 
+				    					icon="ui-icon-close" />
+				</p:confirmDialog>
+			</div>
+		</div> 
+
+		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+			
+		</h:form>
+    </ui:define>
+
+    <ui:define name="footerCont">
+        <script type="text/javascript" charset="utf-8">
+        	$("#sidebar-1").removeClass("active");
+           	$("#sidebar-2").addClass("active");
+           	$("#sidebar-3").removeClass("active");
+        </script>
+    </ui:define>
+</ui:composition>
